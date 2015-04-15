@@ -1,0 +1,60 @@
+#include <opencv2/opencv.hpp>
+#include <iostream>
+#include <string>
+#include <math.h>
+using namespace std;
+using namespace cv;
+
+int main(int argc, char* argv[])
+{   
+	int a,b;
+        char k[20];
+	cout << "请输入图片路径：" << endl;
+        Mat img1 = imread(k, 0);//读取图片，灰度
+	cout << "请输入需要的比特数：" << endl;
+	cin >>a;
+	Mat img2(img1.rows, img1.cols, CV_8UC1);
+	if (img1.empty())
+	{
+		cout << "error";
+		return -1;
+	}
+	if (a < 1)//限定比特数为1~8
+	{
+		a = 1;
+	}
+	if (a>8)
+	{
+		a = 8;
+	}
+	b = 8 - a;
+	if (a == 1)//1比特处理
+	{
+		for (int i = 0; i < img1.rows; i++)
+		{
+			for (int j = 0; j < img1.cols; j++)
+			{
+				img2.at<uchar>(i, j) = img1.at<uchar>(i, j) / pow(2,b);
+				img2.at<uchar>(i, j) = floor(img2.at<uchar>(i, j));
+				img2.at<uchar>(i, j) = img2.at<uchar>(i, j) *255;
+			}
+		}
+	}
+	else//2~8比特处理
+	{
+		for (int i = 0; i < img1.rows; i++)
+		{
+			for (int j = 0; j < img1.cols; j++)
+			{
+				img2.at<uchar>(i, j) = img1.at<uchar>(i, j) /pow(2,b);
+				img2.at<uchar>(i, j) = floor(img2.at<uchar>(i, j));
+				img2.at<uchar>(i, j) = img2.at<uchar>(i, j) * pow(2,b);
+			}
+		}
+	}
+	imwrite("F://2-2.bmp", img2);
+	imshow("实验2-2",img2);
+	waitKey();
+	return 0;
+
+}
